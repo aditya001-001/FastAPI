@@ -8,7 +8,7 @@ class Patient(BaseModel):
     age:int
     weight:float = Field(gt=0,lt=500)
     married:bool=False
-    allergies:Optional[List[str]]=None
+    allergies:Optional[List[str]]=Field(default=None,max_items=5)
     contacts:Dict[str,str]
 def insert_patient_data(patient:Patient):
     print(patient.name)
