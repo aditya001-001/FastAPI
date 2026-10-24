@@ -1,4 +1,4 @@
-from pydantic import BaseModel,EmailStr,AnyUrl,Field
+from pydantic import BaseModel,EmailStr,AnyUrl,Field,field_validator
 from typing import List,Dict,Optional
 
 class Patient(BaseModel):
@@ -8,8 +8,18 @@ class Patient(BaseModel):
     age:int
     weight:float = Field(gt=0,lt=500)
     married:bool=False
-    allergies:Optional[List[str]]=Field(default=None,max_items=5)
+    allergies:Optional[List[str]]=Field(default=None,max_length=5)
     contacts:Dict[str,str]
+
+    @field_validator('email')
+    @classmethod
+    def email_validater(cls,value):
+        valid_domians=['hdfc.com','icici.com']
+        domain_name=value.split('@')[-1]
+        if domain_name not in valid_domians:
+            raise ValueError('not a valid domain')
+        return value
+
 def insert_patient_data(patient:Patient):
     print(patient.name)
     print(patient.age)
@@ -30,6 +40,10 @@ def update_patient_data(patient:Patient):
 
     print("updated patient data successfully")
 
-patient_info={"name":"john","email":"aditya@gmail.com","link":"https://example.com","age":30,"weight":72.3,"allergies":['dust','pollen'],"contacts":{"home":"1234567878","work":"8498283483"}}
+
+
+
+
+patient_info={"name":"john","email":"aditya@hdfc.com","link":"https://example.com","age":30,"weight":72.3,"allergies":['dust','pollen'],"contacts":{"home":"1234567878","work":"8498283483"}}
 patient=Patient(**patient_info)
 update_patient_data(patient)
