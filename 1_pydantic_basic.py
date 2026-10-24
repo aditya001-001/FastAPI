@@ -19,6 +19,12 @@ class Patient(BaseModel):
         if domain_name not in valid_domians:
             raise ValueError('not a valid domain')
         return value
+    @field_validator('age',mode='after')
+    @classmethod
+    def age_validater(cls,value):
+        if value<0:
+            raise ValueError('age cannot be negative')
+        return value
 
 def insert_patient_data(patient:Patient):
     print(patient.name)
@@ -44,6 +50,6 @@ def update_patient_data(patient:Patient):
 
 
 
-patient_info={"name":"john","email":"aditya@hdfc.com","link":"https://example.com","age":30,"weight":72.3,"allergies":['dust','pollen'],"contacts":{"home":"1234567878","work":"8498283483"}}
+patient_info={"name":"john","email":"aditya@hdfc.com","link":"https://example.com","age":'30',"weight":72.3,"allergies":['dust','pollen'],"contacts":{"home":"1234567878","work":"8498283483"}}
 patient=Patient(**patient_info)
 update_patient_data(patient)
